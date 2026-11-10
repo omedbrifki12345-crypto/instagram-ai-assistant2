@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,38 +8,40 @@
 
 <style>
 body {
-  background: #10101c;
-  color: white;
-  font-family: Arial;
-  text-align: center;
-  padding: 20px;
+    background: #10101c;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
 }
-h1 { color: #a78bfa; }
+h1 {
+    color: #a78bfa;
+}
 .card {
-  background: #202035;
-  padding: 25px;
-  margin: 20px auto;
-  border-radius: 15px;
-  max-width: 600px;
+    background: #202035;
+    padding: 25px;
+    margin: 20px auto;
+    border-radius: 15px;
+    max-width: 600px;
 }
-input, select, textarea {
-  padding: 12px;
-  width: 85%;
-  margin: 10px;
-  border-radius: 8px;
-  border: none;
+input, select {
+    padding: 12px;
+    width: 85%;
+    margin: 10px;
+    border-radius: 8px;
+    border: none;
 }
 button {
-  background: #8b5cf6;
-  color: white;
-  padding: 13px 25px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+    background: #8b5cf6;
+    color: white;
+    padding: 13px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }
 #result {
-  white-space: pre-wrap;
-  line-height: 1.6;
+    white-space: pre-wrap;
+    line-height: 1.6;
 }
 </style>
 </head>
@@ -49,47 +52,49 @@ button {
 <p>Your personal AI video assistant</p>
 
 <div class="card">
-<h2>🧠 Choose Your AI</h2>
+    <h2>🧠 Choose Your AI</h2>
 
-<select id="ai">
-<option>ChatGPT</option>
-<option>Claude</option>
-<option>Gemini</option>
-</select>
+    <select id="ai">
+        <option>Gemini</option>
+        <option>ChatGPT</option>
+        <option>Claude</option>
+    </select>
 
-<h2>🎬 Video Idea Generator</h2>
+    <h2>🎬 Video Idea Generator</h2>
 
-<input id="topic" placeholder="Enter your video topic">
+    <input id="topic" placeholder="Enter your video topic">
 
-<button onclick="generate()">Generate Idea</button>
+    <br>
+    <button onclick="generate()">Generate Script</button>
 
-<h2>📝 Your Script</h2>
-<p id="result">Your script will appear here.</p>
+    <h2>📝 Your Script</h2>
+    <p id="result">Your script will appear here.</p>
 
-<button onclick="copyScript()">Copy Script</button>
+    <button onclick="copyScript()">Copy Script</button>
 </div>
 
 <div class="card">
-<h2>🎙️ AI Voice Generator</h2>
-<p>Coming soon!</p>
+    <h2>🎙️ AI Voice Generator</h2>
+    <p>Coming soon!</p>
 </div>
 
 <div class="card">
-<h2>📱 Instagram Reels</h2>
-<p>Coming soon!</p>
+    <h2>📱 Instagram Reels</h2>
+    <p>Coming soon!</p>
 </div>
 
 <script>
 async function generate() {
-    let topic = document.getElementById("topic").value;
-    let ai = document.getElementById("ai").value;
+    const topic = document.getElementById("topic").value;
+    const ai = document.getElementById("ai").value;
+    const result = document.getElementById("result");
 
     if (!topic.trim()) {
         alert("Please enter a video topic!");
         return;
     }
 
-    document.getElementById("result").innerText = "Generating script...";
+    result.innerText = "Generating script...";
 
     try {
         const response = await fetch(
@@ -109,11 +114,23 @@ async function generate() {
             throw new Error(data.detail || "Something went wrong");
         }
 
-        document.getElementById("result").innerText =
-            "Selected AI: Gemini\n\n" + data.script;
+        result.innerText = "Selected AI: " + ai +
+            "\n\n" + data.script;
 
     } catch (error) {
-        document.getElementById("result").innerText =
-            "Error: " + error.message;
+        result.innerText = "Error: " + error.message;
     }
 }
+
+function copyScript() {
+    const text = document.getElementById("result").innerText;
+
+    navigator.clipboard.writeText(text)
+        .then(() => alert("Script copied!"))
+        .catch(() => alert("Could not copy the script."));
+}
+</script>
+
+</body>
+</html>
+```

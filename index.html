@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram AI Studio</title>
+<style>
+body {
+  background: #10101c;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+  padding: 30px;
+}
+h1 { color: #a78bfa; }
+.card {
+  background: #202035;
+  padding: 25px;
+  margin: 20px auto;
+  border-radius: 15px;
+  max-width: 500px;
+}
+button {
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+input {
+  padding: 12px;
+  width: 80%;
+  border-radius: 8px;
+}
+</style>
+</head>
+<body>
+
+<h1>🚀 Instagram AI Studio</h1>
+<p>Your personal AI video assistant</p>
+
+<div class="card">
+<h2>🎬 Video Ideas</h2>
+<input id="topic" placeholder="Enter your video topic">
+<br><br>
+<button onclick="generate()">Generate Idea</button>
+<p id="result"></p>
+</div>
+
+<div class="card">
+<h2>🎙️ AI Script Writer</h2>
+<p>Coming soon!</p>
+</div>
+
+<div class="card">
+<h2>📱 Instagram Reels</h2>
+<p>Coming soon!</p>
+</div>
+
+<script>
+function generate() {
+let topic = document.getElementById("topic").value;
+document.getElementById("result").innerText =
+"Create an interesting 30-second video about " + topic +
+". Start with a strong hook and finish with a question.";
+}
+</script>
+
+</body>
+</html>

@@ -80,30 +80,40 @@ button {
 </div>
 
 <script>
-function generate() {
-let topic = document.getElementById("topic").value;
-let ai = document.getElementById("ai").value;
+async function generate() {
+    let topic = document.getElementById("topic").value;
+    let ai = document.getElementById("ai").value;
 
-if (!topic.trim()) {
-alert("Please enter a video topic!");
-return;
+    if (!topic.trim()) {
+        alert("Please enter a video topic!");
+        return;
+    }
+
+    document.getElementById("result").innerText = "Generating script...";
+
+    try {
+        const response = await fetch(
+            "https://instagram-ai-assistant2.vercel.app/generate-script",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ topic: topic })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Something went wrong");
+        }
+
+        document.getElementById("result").innerText =
+            "Selected AI: Gemini\n\n" + data.script;
+
+    } catch (error) {
+        document.getElementById("result").innerText =
+            "Error: " + error.message;
+    }
 }
-
-document.getElementById("result").innerText =
-"Selected AI: " + ai +
-"\n\nHOOK:\nDid you know something surprising about " + topic + "?\n\n" +
-"SCENE 1:\nIntroduce the topic with an interesting visual.\n\n" +
-"SCENE 2:\nExplain three interesting facts about " + topic + ".\n\n" +
-"SCENE 3:\nFinish with an exciting conclusion.\n\n" +
-"ENDING:\nFollow for more videos!";
-}
-
-function copyScript() {
-let text = document.getElementById("result").innerText;
-navigator.clipboard.writeText(text);
-alert("Script copied!");
-}
-</script>
-
-</body>
-</html>

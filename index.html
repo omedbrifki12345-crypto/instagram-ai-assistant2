@@ -1,229 +1,252 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Instagram AI Studio</title>
-
 <style>
-body {
-    background: #10101c;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 20px;
-}
-
-h1 {
-    color: #a78bfa;
-}
-
-.card {
-    background: #202035;
-    padding: 25px;
-    margin: 20px auto;
-    border-radius: 15px;
-    max-width: 600px;
-}
-
-input, select {
-    padding: 12px;
-    width: 85%;
-    margin: 10px;
-    border-radius: 8px;
-    border: none;
-}
-
-button {
-    background: #8b5cf6;
-    color: white;
-    padding: 13px 25px;
-    margin: 5px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #7c3aed;
-}
-
-#result {
-    white-space: pre-wrap;
-    line-height: 1.6;
-}
+*{box-sizing:border-box}
+body{margin:0;background:#10101c;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:22px}
+h1{color:#c4b5fd;margin-bottom:6px}
+.card{background:#202035;padding:22px;margin:18px auto;border-radius:16px;max-width:720px}
+input,select,textarea{padding:12px;width:min(95%,560px);margin:8px;border-radius:8px;border:0;font:inherit}
+textarea{min-height:220px;resize:vertical}
+button{background:#8b5cf6;color:white;padding:12px 20px;margin:6px;border:0;border-radius:9px;cursor:pointer;font-weight:bold}
+button:hover{background:#7c3aed}
+button:disabled{opacity:.55;cursor:wait}
+#result{white-space:pre-wrap;line-height:1.55;text-align:left;background:#151526;padding:14px;border-radius:10px;min-height:90px}
+small,.muted{color:#c4c4d4}
+#status{min-height:24px;color:#c4b5fd}
+canvas{width:min(100%,360px);height:auto;background:#090914;border-radius:12px;margin-top:12px}
+.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+label{display:block;margin-top:12px}
 </style>
 </head>
-
 <body>
-
 <h1>🚀 Instagram AI Studio</h1>
-<p>Your personal AI video assistant</p>
+<p class="muted">Generate a script, create narration, and render a vertical video.</p>
 
 <div class="card">
-
-    <h2>🧠 Choose Your AI</h2>
-
-    <select id="ai">
-        <option value="Gemini">Gemini</option>
-    </select>
-
-    <h2>🎬 Video Idea Generator</h2>
-
-    <input id="topic" placeholder="Enter your video topic">
-
-    <br>
-
-    <button onclick="generate()">Generate Script</button>
-
-    <h2>📝 Your Script</h2>
-
-    <p id="result">Your script will appear here.</p>
-
+  <h2>🎬 1. Generate your script</h2>
+  <input id="topic" placeholder="Example: 5 surprising football facts">
+  <br><button id="generateBtn" onclick="generateScript()">Generate Script</button>
+  <div id="result">Your script will appear here.</div>
+  <div class="row">
     <button onclick="copyScript()">Copy Script</button>
-
+  </div>
 </div>
 
 <div class="card">
-
-    <h2>🎙️ AI Voice Generator</h2>
-
-    <p>Choose a voice:</p>
-
-    <select id="voice"></select>
-
-    <br>
-
-    <button onclick="speakScript()">🔊 Play Voice</button>
-
-    <button onclick="stopVoice()">⏹ Stop</button>
-
+  <h2>🎙️ 2. Create AI narration</h2>
+  <p class="muted">Choose a voice, then generate an audio track from your script.</p>
+  <select id="voice">
+    <option value="Kore">Kore — clear and confident</option>
+    <option value="Puck">Puck — lively</option>
+    <option value="Charon">Charon — deeper</option>
+    <option value="Aoede">Aoede — warm</option>
+    <option value="Fenrir">Fenrir — energetic</option>
+  </select>
+  <br><button id="audioBtn" onclick="makeNarration()">Generate AI Voice</button>
+  <audio id="narration" controls style="display:none;width:95%;margin:12px auto"></audio>
+  <p id="audioStatus" class="muted">No narration created yet.</p>
 </div>
 
 <div class="card">
-    <h2>📱 Instagram Reels</h2>
-    <p>Coming soon!</p>
+  <h2>🖼️ 3. Add your own pictures (optional)</h2>
+  <p class="muted">Choose up to 6 pictures from your computer. If you skip this, animated text scenes will be used.</p>
+  <input id="pictures" type="file" accept="image/*" multiple>
+</div>
+
+<div class="card">
+  <h2>📽️ 4. Create your video</h2>
+  <p class="muted">The video is vertical (9:16), with animated scenes, captions, and your generated narration.</p>
+  <button id="videoBtn" onclick="createVideo()">Create Video</button>
+  <p id="status"></p>
+  <canvas id="preview" width="720" height="1280"></canvas>
+  <br><a id="download" style="display:none;color:#c4b5fd;font-weight:bold" download="instagram-reel.webm">Download your video</a>
+  <p class="muted">This first version downloads WebM video. It can be played by modern browsers; MP4 export is a separate conversion step.</p>
 </div>
 
 <script>
+const API = "https://instagram-ai-assistant2.vercel.app";
+let generatedAudioUrl = null;
+let audioBlob = null;
+let chosenImages = [];
 
-async function generate() {
-
-    const topic = document.getElementById("topic").value;
-    const ai = document.getElementById("ai").value;
-    const result = document.getElementById("result");
-
-    if (!topic.trim()) {
-        alert("Please enter a video topic!");
-        return;
-    }
-
-    result.innerText = "Generating with Gemini...";
-
-    try {
-
-        const response = await fetch(
-            "https://instagram-ai-assistant2.vercel.app/generate-script",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    topic: topic,
-                    ai: ai
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.detail || "Something went wrong");
-        }
-
-        result.innerText = "Selected AI: Gemini\n\n" + data.script;
-
-    } catch (error) {
-
-        result.innerText = "Error: " + error.message;
-
-    }
+function getScript(){
+  const raw = document.getElementById("result").innerText;
+  if(!raw || raw === "Your script will appear here." || raw.startsWith("Error:")) return "";
+  return raw.replace(/^Selected AI: Gemini\s*/i,"").trim();
 }
 
-
-function copyScript() {
-
-    const text = document.getElementById("result").innerText;
-
-    navigator.clipboard.writeText(text)
-        .then(() => alert("Script copied!"))
-        .catch(() => alert("Could not copy the script."));
-
-}
-
-
-function loadVoices() {
-
-    const voiceSelect = document.getElementById("voice");
-    const voices = speechSynthesis.getVoices();
-
-    voiceSelect.innerHTML = "";
-
-    voices.forEach((voice, index) => {
-
-        const option = document.createElement("option");
-
-        option.value = index;
-        option.textContent = voice.name + " (" + voice.lang + ")";
-
-        voiceSelect.appendChild(option);
-
+async function generateScript(){
+  const topic = document.getElementById("topic").value.trim();
+  const btn = document.getElementById("generateBtn");
+  const result = document.getElementById("result");
+  if(!topic){alert("Please enter a video topic.");return;}
+  btn.disabled = true;
+  result.innerText = "Generating with Gemini...";
+  try{
+    const response = await fetch(API + "/generate-script",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({topic:topic,ai:"Gemini"})
     });
-
+    const data = await response.json();
+    if(!response.ok) throw new Error(data.detail || "Script generation failed.");
+    result.innerText = data.script;
+    audioBlob = null;
+    document.getElementById("narration").style.display = "none";
+    document.getElementById("audioStatus").innerText = "New script created. Generate its narration.";
+  }catch(error){result.innerText = "Error: " + error.message;}
+  finally{btn.disabled = false;}
 }
 
+async function makeNarration(){
+  const script = getScript();
+  const btn = document.getElementById("audioBtn");
+  if(!script){alert("Generate or enter a script first.");return;}
+  btn.disabled = true;
+  document.getElementById("audioStatus").innerText = "Generating AI narration...";
+  try{
+    const response = await fetch(API + "/generate-audio",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({text:script,voice:document.getElementById("voice").value})
+    });
+    const data = await response.json();
+    if(!response.ok) throw new Error(data.detail || "Voice generation failed.");
+    const binary = atob(data.audio);
+    const bytes = new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+    audioBlob = new Blob([bytes],{type:"audio/wav"});
+    if(generatedAudioUrl) URL.revokeObjectURL(generatedAudioUrl);
+    generatedAudioUrl = URL.createObjectURL(audioBlob);
+    const player = document.getElementById("narration");
+    player.src = generatedAudioUrl;
+    player.style.display = "block";
+    document.getElementById("audioStatus").innerText = "Narration ready. You can listen before creating the video.";
+  }catch(error){document.getElementById("audioStatus").innerText = "Error: " + error.message;}
+  finally{btn.disabled = false;}
+}
 
-speechSynthesis.onvoiceschanged = loadVoices;
-loadVoices();
+function copyScript(){
+  const script = getScript();
+  if(!script){alert("There is no script to copy.");return;}
+  navigator.clipboard.writeText(script).then(()=>alert("Script copied!"));
+}
 
+function loadPictures(){
+  const files = Array.from(document.getElementById("pictures").files || []).slice(0,6);
+  chosenImages = [];
+  return Promise.all(files.map(file => new Promise(resolve=>{
+    const img = new Image();
+    img.onload = ()=>{chosenImages.push(img);resolve();};
+    img.onerror = ()=>resolve();
+    img.src = URL.createObjectURL(file);
+  })));
+}
 
-function speakScript() {
+function narrationText(){
+  return getScript().replace(/^(HOOK|SCENE\s*\d+|ENDING)\s*:\s*/gim,"").replace(/\n+/g," ").trim();
+}
 
-    const text = document.getElementById("result").innerText;
+function drawCover(ctx, text, elapsed, duration, images, width, height){
+  const progress = Math.max(0,Math.min(1,elapsed/duration));
+  const scene = Math.min(4,Math.floor(progress*5));
+  const colors = [["#24134b","#111827"],["#312e81","#0f172a"],["#164e63","#111827"],["#581c87","#1e1b4b"],["#7c2d12","#111827"]];
+  const grad = ctx.createLinearGradient(0,0,width,height);
+  grad.addColorStop(0,colors[scene][0]);grad.addColorStop(1,colors[scene][1]);
+  ctx.fillStyle=grad;ctx.fillRect(0,0,width,height);
 
-    if (!text || text === "Your script will appear here." ||
-        text.startsWith("Error:") ||
-        text.startsWith("Generating")) {
+  if(images.length){
+    const img=images[scene%images.length];
+    const scale=Math.max(width/img.width,height/img.height);
+    const iw=img.width*scale, ih=img.height*scale;
+    const drift=Math.sin(elapsed*0.35)*18;
+    ctx.save();ctx.globalAlpha=.42;
+    ctx.drawImage(img,(width-iw)/2+drift,(height-ih)/2,iw,ih);
+    ctx.restore();
+  }
+  ctx.fillStyle="rgba(0,0,0,.28)";ctx.fillRect(38,300,width-76,610);
+  ctx.textAlign="center";
+  ctx.fillStyle="#ddd6fe";ctx.font="bold 34px Arial";
+  ctx.fillText("INSTAGRAM AI STUDIO",width/2,190);
+  ctx.fillStyle="#ffffff";ctx.font="bold 58px Arial";
+  const words=text.split(/\s+/);
+  const start=Math.floor(progress*words.length);
+  const count=Math.min(9,words.length);
+  const line=words.slice(Math.max(0,start-4),Math.max(0,start-4)+count).join(" ");
+  wrapText(ctx,line || text,width/2,530,width-130,76);
+  ctx.fillStyle="#c4b5fd";ctx.font="bold 30px Arial";
+  ctx.fillText("FOLLOW FOR MORE",width/2,1080);
+  ctx.fillStyle="rgba(255,255,255,.75)";ctx.fillRect(70,1160,width-140,8);
+  ctx.fillStyle="#c4b5fd";ctx.fillRect(70,1160,(width-140)*progress,8);
+}
 
-        alert("Generate a script first!");
-        return;
+function wrapText(ctx,text,x,y,maxWidth,lineHeight){
+  const words=text.split(" ");let line="",lines=[];
+  for(const word of words){const test=line?line+" "+word:word;
+    if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word;}else line=test;}
+  if(line)lines.push(line);
+  const shown=lines.slice(0,6);
+  shown.forEach((item,i)=>ctx.fillText(item,x,y+i*lineHeight));
+}
+
+async function createVideo(){
+  if(!audioBlob){alert("First click Generate AI Voice and wait until the narration is ready.");return;}
+  const btn=document.getElementById("videoBtn");
+  const status=document.getElementById("status");
+  const canvas=document.getElementById("preview");
+  const ctx=canvas.getContext("2d");
+  btn.disabled=true;
+  document.getElementById("download").style.display="none";
+  status.innerText="Preparing your video...";
+  try{
+    await loadPictures();
+    const audio=document.getElementById("narration");
+    audio.pause();audio.currentTime=0;
+    await audio.play();
+    const duration=Number.isFinite(audio.duration)&&audio.duration>0?audio.duration:45;
+    const canvasStream=canvas.captureStream(30);
+    const audioContext=new (window.AudioContext||window.webkitAudioContext)();
+    const source=audioContext.createMediaElementSource(audio);
+    const audioDestination=audioContext.createMediaStreamDestination();
+    source.connect(audioDestination);
+    source.connect(audioContext.destination);
+    const combined=new MediaStream([
+      ...canvasStream.getVideoTracks(),
+      ...audioDestination.stream.getAudioTracks()
+    ]);
+    const mime=["video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm"].find(t=>MediaRecorder.isTypeSupported(t));
+    if(!mime) throw new Error("This browser does not support video recording. Please use Chrome or Edge.");
+    const recorder=new MediaRecorder(combined,{mimeType:mime});
+    const chunks=[];
+    recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
+    const finished=new Promise(resolve=>recorder.onstop=resolve);
+    recorder.start(250);
+    const text=narrationText();
+    const start=performance.now();
+    function frame(now){
+      const elapsed=(now-start)/1000;
+      drawCover(ctx,text,elapsed,duration,chosenImages,canvas.width,canvas.height);
+      if(elapsed<duration && recorder.state==="recording") requestAnimationFrame(frame);
+      else if(recorder.state==="recording") recorder.stop();
     }
-
-    speechSynthesis.cancel();
-
-    const speech = new SpeechSynthesisUtterance(text);
-
-    const voices = speechSynthesis.getVoices();
-    const selectedVoice = document.getElementById("voice").value;
-
-    speech.voice = voices[Number(selectedVoice)] || null;
-
-    speech.rate = 1;
-    speech.pitch = 1;
-
-    speechSynthesis.speak(speech);
-
+    requestAnimationFrame(frame);
+    status.innerText="Recording video with narration... Please keep this tab open.";
+    await finished;
+    audio.pause();
+    canvasStream.getTracks().forEach(t=>t.stop());
+    audioContext.close();
+    const videoBlob=new Blob(chunks,{type:"video/webm"});
+    const videoUrl=URL.createObjectURL(videoBlob);
+    const link=document.getElementById("download");
+    link.href=videoUrl;link.style.display="inline-block";
+    link.innerText="⬇ Download your finished video";
+    status.innerText="Your video is ready!";
+  }catch(error){status.innerText="Error: "+error.message;}
+  finally{btn.disabled=false;}
 }
-
-
-function stopVoice() {
-
-    speechSynthesis.cancel();
-
-}
-
 </script>
-
 </body>
 </html>

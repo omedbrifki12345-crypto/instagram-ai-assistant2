@@ -13,7 +13,11 @@ body {
     text-align: center;
     padding: 20px;
 }
-h1 { color: #a78bfa; }
+
+h1 {
+    color: #a78bfa;
+}
+
 .card {
     background: #202035;
     padding: 25px;
@@ -21,6 +25,7 @@ h1 { color: #a78bfa; }
     border-radius: 15px;
     max-width: 600px;
 }
+
 input, select {
     padding: 12px;
     width: 85%;
@@ -28,14 +33,21 @@ input, select {
     border-radius: 8px;
     border: none;
 }
+
 button {
     background: #8b5cf6;
     color: white;
     padding: 13px 25px;
+    margin: 5px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
 }
+
+button:hover {
+    background: #7c3aed;
+}
+
 #result {
     white-space: pre-wrap;
     line-height: 1.6;
@@ -53,8 +65,9 @@ button {
     <h2>🧠 Choose Your AI</h2>
 
     <select id="ai">
-    <option value="Gemini">Gemini</option>
-</select>
+        <option value="Gemini">Gemini</option>
+    </select>
+
     <h2>🎬 Video Idea Generator</h2>
 
     <input id="topic" placeholder="Enter your video topic">
@@ -72,17 +85,19 @@ button {
 </div>
 
 <div class="card">
+
     <h2>🎙️ AI Voice Generator</h2>
 
-    <select id="voice">
-        <option value="male">Male Voice</option>
-        <option value="female">Female Voice</option>
-    </select>
+    <p>Choose a voice:</p>
+
+    <select id="voice"></select>
 
     <br>
 
     <button onclick="speakScript()">🔊 Play Voice</button>
+
     <button onclick="stopVoice()">⏹ Stop</button>
+
 </div>
 
 <div class="card">
@@ -103,7 +118,7 @@ async function generate() {
         return;
     }
 
-    result.innerText = "Generating with " + ai + "...";
+    result.innerText = "Generating with Gemini...";
 
     try {
 
@@ -127,8 +142,7 @@ async function generate() {
             throw new Error(data.detail || "Something went wrong");
         }
 
-        result.innerText = "Selected AI: " + ai +
-            "\n\n" + data.script;
+        result.innerText = "Selected AI: Gemini\n\n" + data.script;
 
     } catch (error) {
 
@@ -137,6 +151,7 @@ async function generate() {
     }
 }
 
+
 function copyScript() {
 
     const text = document.getElementById("result").innerText;
@@ -144,6 +159,67 @@ function copyScript() {
     navigator.clipboard.writeText(text)
         .then(() => alert("Script copied!"))
         .catch(() => alert("Could not copy the script."));
+
+}
+
+
+function loadVoices() {
+
+    const voiceSelect = document.getElementById("voice");
+    const voices = speechSynthesis.getVoices();
+
+    voiceSelect.innerHTML = "";
+
+    voices.forEach((voice, index) => {
+
+        const option = document.createElement("option");
+
+        option.value = index;
+        option.textContent = voice.name + " (" + voice.lang + ")";
+
+        voiceSelect.appendChild(option);
+
+    });
+
+}
+
+
+speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+
+function speakScript() {
+
+    const text = document.getElementById("result").innerText;
+
+    if (!text || text === "Your script will appear here." ||
+        text.startsWith("Error:") ||
+        text.startsWith("Generating")) {
+
+        alert("Generate a script first!");
+        return;
+    }
+
+    speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(text);
+
+    const voices = speechSynthesis.getVoices();
+    const selectedVoice = document.getElementById("voice").value;
+
+    speech.voice = voices[Number(selectedVoice)] || null;
+
+    speech.rate = 1;
+    speech.pitch = 1;
+
+    speechSynthesis.speak(speech);
+
+}
+
+
+function stopVoice() {
+
+    speechSynthesis.cancel();
 
 }
 

@@ -30,7 +30,7 @@ def generate_script(request: VideoRequest):
     )
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+model="gemini-3.8-flash",
         contents=f"""
         Create a short Instagram Reel script about {request.topic}.
         Include a hook, 3 scenes, and an ending.

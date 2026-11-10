@@ -73,7 +73,16 @@ button {
 
 <div class="card">
     <h2>🎙️ AI Voice Generator</h2>
-    <p>Coming soon!</p>
+
+    <select id="voice">
+        <option value="male">Male Voice</option>
+        <option value="female">Female Voice</option>
+    </select>
+
+    <br>
+
+    <button onclick="speakScript()">🔊 Play Voice</button>
+    <button onclick="stopVoice()">⏹ Stop</button>
 </div>
 
 <div class="card">

@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Instagram AI Studio</title>
+
 <style>
 body {
   background: #10101c;
   color: white;
   font-family: Arial;
   text-align: center;
-  padding: 30px;
+  padding: 20px;
 }
 h1 { color: #a78bfa; }
 .card {
@@ -18,38 +19,58 @@ h1 { color: #a78bfa; }
   padding: 25px;
   margin: 20px auto;
   border-radius: 15px;
-  max-width: 500px;
+  max-width: 600px;
+}
+input, select, textarea {
+  padding: 12px;
+  width: 85%;
+  margin: 10px;
+  border-radius: 8px;
+  border: none;
 }
 button {
   background: #8b5cf6;
   color: white;
+  padding: 13px 25px;
   border: none;
-  padding: 12px 25px;
   border-radius: 8px;
   cursor: pointer;
 }
-input {
-  padding: 12px;
-  width: 80%;
-  border-radius: 8px;
+#result {
+  white-space: pre-wrap;
+  line-height: 1.6;
 }
 </style>
 </head>
+
 <body>
 
 <h1>🚀 Instagram AI Studio</h1>
 <p>Your personal AI video assistant</p>
 
 <div class="card">
-<h2>🎬 Video Ideas</h2>
+<h2>🧠 Choose Your AI</h2>
+
+<select id="ai">
+<option>ChatGPT</option>
+<option>Claude</option>
+<option>Gemini</option>
+</select>
+
+<h2>🎬 Video Idea Generator</h2>
+
 <input id="topic" placeholder="Enter your video topic">
-<br><br>
+
 <button onclick="generate()">Generate Idea</button>
-<p id="result"></p>
+
+<h2>📝 Your Script</h2>
+<p id="result">Your script will appear here.</p>
+
+<button onclick="copyScript()">Copy Script</button>
 </div>
 
 <div class="card">
-<h2>🎙️ AI Script Writer</h2>
+<h2>🎙️ AI Voice Generator</h2>
 <p>Coming soon!</p>
 </div>
 
@@ -61,9 +82,26 @@ input {
 <script>
 function generate() {
 let topic = document.getElementById("topic").value;
+let ai = document.getElementById("ai").value;
+
+if (!topic.trim()) {
+alert("Please enter a video topic!");
+return;
+}
+
 document.getElementById("result").innerText =
-"Create an interesting 30-second video about " + topic +
-". Start with a strong hook and finish with a question.";
+"Selected AI: " + ai +
+"\n\nHOOK:\nDid you know something surprising about " + topic + "?\n\n" +
+"SCENE 1:\nIntroduce the topic with an interesting visual.\n\n" +
+"SCENE 2:\nExplain three interesting facts about " + topic + ".\n\n" +
+"SCENE 3:\nFinish with an exciting conclusion.\n\n" +
+"ENDING:\nFollow for more videos!";
+}
+
+function copyScript() {
+let text = document.getElementById("result").innerText;
+navigator.clipboard.writeText(text);
+alert("Script copied!");
 }
 </script>
 

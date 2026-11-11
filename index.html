@@ -4,22 +4,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#090710">
-<title>VIOLET AI — Script & Voice Studio</title>
+<meta name="theme-color" content="#080611">
+<meta name="description" content="OMEED AI STUDIO - Your personal AI script and voice creation platform.">
+
+<title>OMEED AI STUDIO | Create Without Limits</title>
 
 <style>
 :root {
-  --bg:#090710;
-  --panel:#14111f;
-  --panel2:#1c172b;
-  --purple:#9b5cff;
-  --light:#c9a8ff;
-  --text:#f8f5ff;
-  --muted:#a49bb5;
-  --border:rgba(190,145,255,.15);
+  --bg:#080611;
+  --panel:#120e20;
+  --panel2:#1b1430;
+  --purple:#a56aff;
+  --light:#d7baff;
+  --text:#faf7ff;
+  --muted:#aaa0bd;
+  --border:rgba(183,137,255,.19);
 }
 
-* {box-sizing:border-box}
+* {
+  box-sizing:border-box;
+}
+
+html {
+  scroll-behavior:smooth;
+}
 
 body {
   margin:0;
@@ -27,147 +35,173 @@ body {
   color:var(--text);
   font-family:Inter,Arial,sans-serif;
   min-height:100vh;
+  overflow-x:hidden;
 }
 
 body:before {
   content:"";
   position:fixed;
-  width:500px;
-  height:500px;
+  width:550px;
+  height:550px;
   background:#7c3aed;
   filter:blur(180px);
-  opacity:.12;
-  top:-200px;
-  left:30%;
+  opacity:.14;
+  top:-240px;
+  left:25%;
   pointer-events:none;
+  z-index:-1;
 }
 
+body:after {
+  content:"";
+  position:fixed;
+  width:400px;
+  height:400px;
+  background:#4c1d95;
+  filter:blur(160px);
+  opacity:.12;
+  bottom:-200px;
+  right:-100px;
+  pointer-events:none;
+  z-index:-1;
+}
+
+/* HEADER */
+
 header {
-  height:76px;
-  padding:0 6%;
+  height:80px;
+  padding:0 7%;
   display:flex;
   align-items:center;
   justify-content:space-between;
   border-bottom:1px solid var(--border);
-  position:relative;
-  z-index:2;
-  background:rgba(9,7,16,.8);
-  backdrop-filter:blur(15px);
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:rgba(8,6,17,.85);
+  backdrop-filter:blur(20px);
 }
 
 .logo {
-  font-size:22px;
-  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-size:21px;
+  font-weight:950;
   letter-spacing:2px;
 }
 
-.logo span {color:var(--purple)}
+.logo-icon {
+  width:37px;
+  height:37px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#7137c9,#b57aff);
+  border-radius:11px;
+  box-shadow:0 0 25px #9b5cff55;
+  font-size:19px;
+}
+
+.logo span {
+  color:var(--purple);
+}
+
+.header-right {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
 .header-tag {
-  color:var(--light);
   border:1px solid var(--border);
-  padding:9px 14px;
+  background:#a56aff0c;
+  color:var(--light);
+  padding:10px 15px;
   border-radius:30px;
-  font-size:12px;
+  font-size:11px;
+  letter-spacing:1px;
 }
+
+/* MAIN */
 
 .container {
-  width:min(1050px,92%);
-  margin:55px auto;
-  position:relative;
+  width:min(1050px,90%);
+  margin:65px auto;
 }
 
-.hero {margin-bottom:35px}
+/* HERO */
+
+.hero {
+  text-align:center;
+  margin-bottom:55px;
+  padding:30px 0;
+}
 
 .eyebrow {
-  color:var(--purple);
-  font-size:12px;
-  letter-spacing:3px;
+  display:inline-block;
+  color:var(--light);
+  background:#a56aff12;
+  border:1px solid var(--border);
+  border-radius:30px;
+  padding:10px 17px;
+  font-size:11px;
   font-weight:bold;
+  letter-spacing:2px;
 }
 
 h1 {
-  font-size:clamp(32px,6vw,55px);
-  margin:12px 0;
-  letter-spacing:-2px;
+  font-size:clamp(42px,8vw,75px);
+  line-height:1.07;
+  margin:25px 0 18px;
+  letter-spacing:-3px;
+  font-weight:950;
 }
 
 h1 span {
-  background:linear-gradient(90deg,#a56aff,#e0c6ff);
+  background:linear-gradient(90deg,#9860ff,#e0c4ff,#a56aff);
   -webkit-background-clip:text;
+  background-clip:text;
   color:transparent;
 }
 
 .subtitle {
+  max-width:590px;
+  margin:auto;
   color:var(--muted);
-  line-height:1.7;
+  line-height:1.8;
+  font-size:15px;
 }
 
-.card {
-  background:linear-gradient(145deg,#171323,#100e19);
-  border:1px solid var(--border);
-  padding:27px;
-  border-radius:20px;
-  margin:22px 0;
-  box-shadow:0 15px 45px rgba(0,0,0,.18);
+.hero-buttons {
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:28px;
+  flex-wrap:wrap;
 }
 
-.card h2 {
-  margin-top:0;
-  font-size:19px;
+.hero-buttons a {
+  text-decoration:none;
 }
 
-.number {
-  display:inline-grid;
-  place-items:center;
-  width:30px;
-  height:30px;
-  background:#38215d;
-  color:#d6b8ff;
-  border-radius:9px;
-  margin-right:8px;
-}
-
-input,select,textarea {
-  width:100%;
-  padding:15px;
-  margin:10px 0;
-  background:#0c0a13;
-  border:1px solid var(--border);
-  color:white;
-  border-radius:11px;
-  font:inherit;
-  outline:none;
-}
-
-input:focus,select:focus,textarea:focus {
-  border-color:var(--purple);
-  box-shadow:0 0 15px #9b5cff20;
-}
-
-textarea {
-  min-height:230px;
-  resize:vertical;
-  line-height:1.7;
-}
-
-select option {background:#171323}
+/* BUTTONS */
 
 button {
   border:0;
-  padding:13px 20px;
-  border-radius:10px;
+  padding:14px 21px;
+  border-radius:11px;
   color:white;
-  background:linear-gradient(100deg,#7738d9,#a45eff);
+  background:linear-gradient(110deg,#7137d5,#a56aff);
   font-weight:bold;
   cursor:pointer;
-  transition:.2s;
+  transition:.25s;
   font-size:14px;
+  font-family:inherit;
 }
 
 button:hover {
-  transform:translateY(-2px);
-  box-shadow:0 5px 22px #9b5cff45;
+  transform:translateY(-3px);
+  box-shadow:0 8px 30px #9b5cff45;
 }
 
 button:disabled {
@@ -177,34 +211,119 @@ button:disabled {
 }
 
 .secondary {
-  background:#272035;
+  background:#211932;
   border:1px solid var(--border);
+}
+
+.hero-button {
+  padding:15px 25px;
+}
+
+/* CARDS */
+
+.card {
+  background:linear-gradient(145deg,rgba(28,20,45,.94),rgba(14,11,24,.97));
+  border:1px solid var(--border);
+  padding:30px;
+  border-radius:21px;
+  margin:25px 0;
+  box-shadow:0 18px 55px rgba(0,0,0,.25);
+  transition:.3s;
+}
+
+.card:hover {
+  border-color:rgba(183,137,255,.38);
+}
+
+.card h2 {
+  margin:0 0 12px;
+  font-size:21px;
+  display:flex;
+  align-items:center;
+}
+
+.number {
+  display:inline-grid;
+  place-items:center;
+  width:36px;
+  height:36px;
+  background:linear-gradient(135deg,#6735ae,#9b5cff);
+  color:white;
+  border-radius:11px;
+  margin-right:12px;
+  font-size:13px;
+}
+
+.card-description {
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.7;
+  margin-bottom:20px;
+}
+
+/* INPUTS */
+
+input,select,textarea {
+  width:100%;
+  padding:16px;
+  margin:10px 0;
+  background:#0a0813;
+  border:1px solid var(--border);
+  color:white;
+  border-radius:12px;
+  font:inherit;
+  outline:none;
+  transition:.2s;
+}
+
+input:focus,select:focus,textarea:focus {
+  border-color:var(--purple);
+  box-shadow:0 0 18px #9b5cff20;
+}
+
+input::placeholder,textarea::placeholder {
+  color:#716782;
+}
+
+textarea {
+  min-height:230px;
+  resize:vertical;
+  line-height:1.8;
+}
+
+select option {
+  background:#171323;
 }
 
 .row {
   display:flex;
-  gap:10px;
+  gap:12px;
   flex-wrap:wrap;
-  margin-top:12px;
+  margin-top:15px;
 }
 
-.row button {flex:1}
+.row button {
+  flex:1;
+}
 
 .muted {
   color:var(--muted);
   font-size:13px;
-  line-height:1.6;
+  line-height:1.7;
 }
+
+/* STATUS */
 
 #audioStatus {
   color:var(--light);
   min-height:22px;
-  margin-top:16px;
+  margin-top:17px;
+  font-size:13px;
 }
 
 audio {
   width:100%;
-  margin:18px 0;
+  margin:20px 0;
   accent-color:var(--purple);
 }
 
@@ -212,27 +331,159 @@ audio {
   display:none;
   text-decoration:none;
   color:white;
-  background:#38215d;
-  border:1px solid #9b5cff;
-  padding:13px 20px;
-  border-radius:10px;
+  background:#34204f;
+  border:1px solid var(--purple);
+  padding:14px 20px;
+  border-radius:11px;
   font-weight:bold;
+  font-size:13px;
 }
+
+/* FEATURES */
+
+.features {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin:45px 0;
+}
+
+.feature {
+  text-align:center;
+  padding:23px 13px;
+  border:1px solid var(--border);
+  background:#151022a8;
+  border-radius:17px;
+}
+
+.feature-icon {
+  font-size:27px;
+  margin-bottom:12px;
+}
+
+.feature h3 {
+  font-size:14px;
+  margin:5px 0;
+}
+
+.feature p {
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.6;
+}
+
+/* FOOTER */
 
 footer {
   text-align:center;
-  padding:30px;
+  padding:45px 20px;
   border-top:1px solid var(--border);
   color:var(--muted);
   font-size:12px;
 }
 
-@media(max-width:600px) {
-  header {padding:0 5%}
-  .container {margin:35px auto}
-  .card {padding:19px}
-  .row {flex-direction:column}
-  .row button {width:100%}
+footer .logo {
+  justify-content:center;
+  margin-bottom:17px;
+}
+
+footer p {
+  line-height:1.8;
+}
+
+.footer-tagline {
+  color:var(--light);
+  letter-spacing:2px;
+  font-size:10px;
+}
+
+/* LOADING */
+
+@keyframes pulse {
+  0%,100% {opacity:1}
+  50% {opacity:.45}
+}
+
+.loading {
+  animation:pulse 1.2s infinite;
+}
+
+/* MOBILE */
+
+@media(max-width:650px) {
+  header {
+    height:70px;
+    padding:0 5%;
+  }
+
+  .logo {
+    font-size:16px;
+    letter-spacing:1px;
+    gap:7px;
+  }
+
+  .logo-icon {
+    width:32px;
+    height:32px;
+  }
+
+  .header-tag {
+    font-size:9px;
+    padding:8px 10px;
+  }
+
+  .container {
+    width:91%;
+    margin:35px auto;
+  }
+
+  .hero {
+    padding:20px 0;
+    margin-bottom:35px;
+  }
+
+  h1 {
+    font-size:44px;
+    letter-spacing:-2px;
+  }
+
+  .subtitle {
+    font-size:13px;
+  }
+
+  .card {
+    padding:21px;
+    border-radius:17px;
+  }
+
+  .card h2 {
+    font-size:18px;
+  }
+
+  .row {
+    flex-direction:column;
+  }
+
+  .row button {
+    width:100%;
+  }
+
+  .features {
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .feature {
+    padding:17px;
+  }
+
+  .hero-buttons {
+    flex-direction:column;
+  }
+
+  .hero-buttons button {
+    width:100%;
+  }
 }
 </style>
 </head>
@@ -240,57 +491,139 @@ footer {
 <body>
 
 <header>
-  <div class="logo">VIOLET<span> AI.</span></div>
-  <div class="header-tag">✦ AI CREATOR STUDIO</div>
+  <div class="logo">
+    <div class="logo-icon">✦</div>
+    OMEED <span>AI.</span>
+  </div>
+
+  <div class="header-right">
+    <div class="header-tag">✦ AI CREATOR STUDIO</div>
+  </div>
 </header>
 
 <main class="container">
 
 <section class="hero">
-  <div class="eyebrow">YOUR CREATIVE SPACE</div>
-  <h1>Create. Speak.<br><span>Go Viral.</span></h1>
+
+  <div class="eyebrow">✦ WELCOME TO OMEED AI STUDIO</div>
+
+  <h1>
+    Create Without<br>
+    <span>Limits.</span>
+  </h1>
+
   <p class="subtitle">
-    Turn your ideas into powerful scripts and natural AI voiceovers.
-    Everything you need in one studio.
+    Your ideas. Your creativity. Your voice.
+    Turn simple ideas into powerful scripts and natural AI voiceovers.
+    Everything you need in one premium studio.
   </p>
+
+  <div class="hero-buttons">
+    <a href="#script">
+      <button class="hero-button">✦ Start Creating</button>
+    </a>
+    <a href="#voice">
+      <button class="secondary hero-button">Explore AI Voices ↓</button>
+    </a>
+  </div>
+
 </section>
 
-<div class="card">
-  <h2><span class="number">01</span> Script Generator</h2>
-  <p class="muted">What should your next video be about?</p>
+<!-- FEATURES -->
 
-  <input id="topic" placeholder="Example: 5 surprising football facts">
+<section class="features">
+
+  <div class="feature">
+    <div class="feature-icon">✍️</div>
+    <h3>AI Scripts</h3>
+    <p>Turn your ideas into engaging scripts.</p>
+  </div>
+
+  <div class="feature">
+    <div class="feature-icon">🎙️</div>
+    <h3>AI Voices</h3>
+    <p>Transform your words into narration.</p>
+  </div>
+
+  <div class="feature">
+    <div class="feature-icon">⚡</div>
+    <h3>Instant Creation</h3>
+    <p>Create content in one simple studio.</p>
+  </div>
+
+</section>
+
+<!-- SCRIPT GENERATOR -->
+
+<div class="card" id="script">
+
+  <h2>
+    <span class="number">01</span>
+    Script Generator
+  </h2>
+
+  <p class="card-description">
+    What should your next video be about?
+    Enter a topic and let AI help you create.
+  </p>
+
+  <input
+    id="topic"
+    placeholder="Example: 5 surprising football facts"
+  >
 
   <div class="row">
+
     <button id="generateBtn" onclick="generateScript()">
       ✦ Generate with Gemini
     </button>
+
     <button class="secondary" onclick="openChatGPT()">
       Open ChatGPT ↗
     </button>
+
   </div>
 
   <p class="muted">
-    You can also paste your own script below.
+    Or paste your own script below.
   </p>
 
-  <textarea id="result" placeholder="Your generated script will appear here..."></textarea>
+  <textarea
+    id="result"
+    placeholder="Your generated script will appear here..."
+  ></textarea>
 
-  <button class="secondary" onclick="copyScript()">Copy Script</button>
+  <button class="secondary" onclick="copyScript()">
+    Copy Script
+  </button>
+
 </div>
 
-<div class="card">
-  <h2><span class="number">02</span> AI Voice Studio</h2>
-  <p class="muted">
-    Choose your preferred voice and turn your script into narration.
+<!-- VOICE GENERATOR -->
+
+<div class="card" id="voice">
+
+  <h2>
+    <span class="number">02</span>
+    AI Voice Studio
+  </h2>
+
+  <p class="card-description">
+    Choose your preferred AI voice and transform your script into narration.
   </p>
 
-  <select id="voice">
+  <select id="voiceSelect">
+
     <option value="Kore">Kore — Clear and confident</option>
+
     <option value="Puck">Puck — Lively</option>
+
     <option value="Charon">Charon — Deep voice</option>
+
     <option value="Aoede">Aoede — Warm voice</option>
+
     <option value="Fenrir">Fenrir — Energetic</option>
+
   </select>
 
   <button id="audioBtn" onclick="makeNarration()">
@@ -299,22 +632,41 @@ footer {
 
   <audio id="narration" controls style="display:none"></audio>
 
-  <p id="audioStatus">Your audio is waiting to be created.</p>
+  <p id="audioStatus">
+    Your audio is waiting to be created.
+  </p>
 
-  <a id="downloadAudio" download="ai-narration.wav">
+  <a id="downloadAudio" download="omeed-ai-narration.wav">
     ↓ Download WAV Audio
   </a>
+
 </div>
 
 </main>
 
 <footer>
-  <div class="logo">VIOLET<span> AI.</span></div>
-  <p>Designed for creators. Powered by AI.</p>
-  <p>© 2026 Violet AI Studio</p>
+
+  <div class="logo">
+    <div class="logo-icon">✦</div>
+    OMEED <span>AI.</span>
+  </div>
+
+  <p class="footer-tagline">
+    CREATE THE FUTURE WITH AI.
+  </p>
+
+  <p>
+    Your creativity. Powered by artificial intelligence.
+  </p>
+
+  <p>
+    © 2026 OMEED AI STUDIO. All rights reserved.
+  </p>
+
 </footer>
 
 <script>
+
 const API = "https://instagram-ai-assistant2.vercel.app";
 
 let generatedAudioUrl = null;
@@ -323,7 +675,10 @@ function getScript() {
   return document.getElementById("result").value.trim();
 }
 
+/* CHATGPT */
+
 function openChatGPT() {
+
   const topic = document.getElementById("topic").value.trim();
 
   if (!topic) {
@@ -337,17 +692,29 @@ function openChatGPT() {
     ". Use exciting spoken language and interesting facts. No camera directions.";
 
   navigator.clipboard.writeText(prompt).then(() => {
+
     alert("Prompt copied! Paste it into ChatGPT.");
+
     window.open("https://chatgpt.com/", "_blank");
+
   }).catch(() => {
+
     window.open("https://chatgpt.com/", "_blank");
+
     alert("Please enter this topic into ChatGPT: " + prompt);
+
   });
+
 }
 
+/* GEMINI SCRIPT GENERATOR */
+
 async function generateScript() {
+
   const topic = document.getElementById("topic").value.trim();
+
   const btn = document.getElementById("generateBtn");
+
   const result = document.getElementById("result");
 
   if (!topic) {
@@ -356,13 +723,28 @@ async function generateScript() {
   }
 
   btn.disabled = true;
-  result.value = "Creating your script...";
+
+  btn.classList.add("loading");
+
+  btn.innerText = "Creating your script...";
+
+  result.value = "OMEED AI is creating your script...";
 
   try {
+
     const response = await fetch(API + "/generate-script", {
+
       method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({topic: topic, ai: "Gemini"})
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        topic: topic,
+        ai: "Gemini"
+      })
+
     });
 
     const data = await response.json();
@@ -372,17 +754,31 @@ async function generateScript() {
     }
 
     result.value = data.script;
+
     resetAudio("New script created. Generate its narration.");
 
   } catch (error) {
+
     result.value = "Error: " + error.message;
+
   } finally {
+
     btn.disabled = false;
+
+    btn.classList.remove("loading");
+
+    btn.innerText = "✦ Generate with Gemini";
+
   }
+
 }
 
+/* AI VOICE GENERATOR */
+
 async function makeNarration() {
+
   const script = getScript();
+
   const btn = document.getElementById("audioBtn");
 
   if (!script) {
@@ -391,19 +787,34 @@ async function makeNarration() {
   }
 
   btn.disabled = true;
+
+  btn.classList.add("loading");
+
+  btn.innerText = "Creating AI Voice...";
+
   document.getElementById("audioStatus").innerText =
-    "Creating your AI voice...";
+    "OMEED AI is creating your narration...";
 
   document.getElementById("downloadAudio").style.display = "none";
 
   try {
+
     const response = await fetch(API + "/generate-audio", {
+
       method: "POST",
-      headers: {"Content-Type": "application/json"},
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
       body: JSON.stringify({
+
         text: script,
-        voice: document.getElementById("voice").value
+
+        voice: document.getElementById("voiceSelect").value
+
       })
+
     });
 
     const data = await response.json();
@@ -412,14 +823,21 @@ async function makeNarration() {
       throw new Error(data.detail || "Voice generation failed.");
     }
 
+    if (!data.audio) {
+      throw new Error("No audio was returned by the server.");
+    }
+
     const binary = atob(data.audio);
+
     const bytes = new Uint8Array(binary.length);
 
     for (let i = 0; i < binary.length; i++) {
       bytes[i] = binary.charCodeAt(i);
     }
 
-    const blob = new Blob([bytes], {type: "audio/wav"});
+    const blob = new Blob([bytes], {
+      type: "audio/wav"
+    });
 
     if (generatedAudioUrl) {
       URL.revokeObjectURL(generatedAudioUrl);
@@ -428,40 +846,67 @@ async function makeNarration() {
     generatedAudioUrl = URL.createObjectURL(blob);
 
     const player = document.getElementById("narration");
+
     player.src = generatedAudioUrl;
+
     player.style.display = "block";
 
     const download = document.getElementById("downloadAudio");
+
     download.href = generatedAudioUrl;
+
     download.style.display = "inline-block";
 
     document.getElementById("audioStatus").innerText =
-      "✓ Your narration is ready!";
+      "✓ Your OMEED AI narration is ready!";
 
   } catch (error) {
+
     document.getElementById("audioStatus").innerText =
       "Error: " + error.message;
+
   } finally {
+
     btn.disabled = false;
+
+    btn.classList.remove("loading");
+
+    btn.innerText = "✦ Generate AI Voice";
+
   }
+
 }
 
+/* RESET AUDIO */
+
 function resetAudio(message) {
+
   if (generatedAudioUrl) {
+
     URL.revokeObjectURL(generatedAudioUrl);
+
     generatedAudioUrl = null;
+
   }
 
   const player = document.getElementById("narration");
+
   player.pause();
+
   player.removeAttribute("src");
+
   player.style.display = "none";
 
   document.getElementById("downloadAudio").style.display = "none";
+
   document.getElementById("audioStatus").innerText = message;
+
 }
 
+/* COPY SCRIPT */
+
 function copyScript() {
+
   const script = getScript();
 
   if (!script) {
@@ -470,13 +915,25 @@ function copyScript() {
   }
 
   navigator.clipboard.writeText(script)
-    .then(() => alert("Script copied!"))
-    .catch(() => alert("Copy is not available in this browser."));
+
+    .then(() => {
+      alert("Script copied!");
+    })
+
+    .catch(() => {
+      alert("Copy is not available in this browser.");
+    });
+
 }
 
+/* RESET AUDIO WHEN SCRIPT CHANGES */
+
 document.getElementById("result").addEventListener("input", () => {
+
   resetAudio("Script changed. Generate a new narration.");
+
 });
+
 </script>
 
 </body>

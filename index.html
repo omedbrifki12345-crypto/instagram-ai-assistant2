@@ -1,222 +1,482 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Script & AI Voice Studio</title>
+<meta name="theme-color" content="#090710">
+<title>VIOLET AI — Script & Voice Studio</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#10101c;color:white;font-family:Arial,sans-serif;text-align:center;padding:22px}
-h1{color:#c4b5fd}
-.card{background:#202035;padding:22px;margin:18px auto;border-radius:16px;max-width:720px}
-input,select,textarea{padding:12px;width:min(95%,560px);margin:8px;border-radius:8px;border:0;font:inherit}
-textarea{min-height:220px;resize:vertical}
-button{background:#8b5cf6;color:white;padding:12px 20px;margin:6px;border:0;border-radius:9px;cursor:pointer;font-weight:bold}
-button:hover{background:#7c3aed}
-button:disabled{opacity:.55}
-#result{white-space:pre-wrap;line-height:1.55;text-align:left;background:#151526;color:white}
-small,.muted{color:#c4c4d4}
-#audioStatus{min-height:24px;color:#c4b5fd}
-.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+:root {
+  --bg:#090710;
+  --panel:#14111f;
+  --panel2:#1c172b;
+  --purple:#9b5cff;
+  --light:#c9a8ff;
+  --text:#f8f5ff;
+  --muted:#a49bb5;
+  --border:rgba(190,145,255,.15);
+}
+
+* {box-sizing:border-box}
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,sans-serif;
+  min-height:100vh;
+}
+
+body:before {
+  content:"";
+  position:fixed;
+  width:500px;
+  height:500px;
+  background:#7c3aed;
+  filter:blur(180px);
+  opacity:.12;
+  top:-200px;
+  left:30%;
+  pointer-events:none;
+}
+
+header {
+  height:76px;
+  padding:0 6%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  position:relative;
+  z-index:2;
+  background:rgba(9,7,16,.8);
+  backdrop-filter:blur(15px);
+}
+
+.logo {
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.logo span {color:var(--purple)}
+
+.header-tag {
+  color:var(--light);
+  border:1px solid var(--border);
+  padding:9px 14px;
+  border-radius:30px;
+  font-size:12px;
+}
+
+.container {
+  width:min(1050px,92%);
+  margin:55px auto;
+  position:relative;
+}
+
+.hero {margin-bottom:35px}
+
+.eyebrow {
+  color:var(--purple);
+  font-size:12px;
+  letter-spacing:3px;
+  font-weight:bold;
+}
+
+h1 {
+  font-size:clamp(32px,6vw,55px);
+  margin:12px 0;
+  letter-spacing:-2px;
+}
+
+h1 span {
+  background:linear-gradient(90deg,#a56aff,#e0c6ff);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.subtitle {
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.card {
+  background:linear-gradient(145deg,#171323,#100e19);
+  border:1px solid var(--border);
+  padding:27px;
+  border-radius:20px;
+  margin:22px 0;
+  box-shadow:0 15px 45px rgba(0,0,0,.18);
+}
+
+.card h2 {
+  margin-top:0;
+  font-size:19px;
+}
+
+.number {
+  display:inline-grid;
+  place-items:center;
+  width:30px;
+  height:30px;
+  background:#38215d;
+  color:#d6b8ff;
+  border-radius:9px;
+  margin-right:8px;
+}
+
+input,select,textarea {
+  width:100%;
+  padding:15px;
+  margin:10px 0;
+  background:#0c0a13;
+  border:1px solid var(--border);
+  color:white;
+  border-radius:11px;
+  font:inherit;
+  outline:none;
+}
+
+input:focus,select:focus,textarea:focus {
+  border-color:var(--purple);
+  box-shadow:0 0 15px #9b5cff20;
+}
+
+textarea {
+  min-height:230px;
+  resize:vertical;
+  line-height:1.7;
+}
+
+select option {background:#171323}
+
+button {
+  border:0;
+  padding:13px 20px;
+  border-radius:10px;
+  color:white;
+  background:linear-gradient(100deg,#7738d9,#a45eff);
+  font-weight:bold;
+  cursor:pointer;
+  transition:.2s;
+  font-size:14px;
+}
+
+button:hover {
+  transform:translateY(-2px);
+  box-shadow:0 5px 22px #9b5cff45;
+}
+
+button:disabled {
+  opacity:.5;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.secondary {
+  background:#272035;
+  border:1px solid var(--border);
+}
+
+.row {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.row button {flex:1}
+
+.muted {
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+
+#audioStatus {
+  color:var(--light);
+  min-height:22px;
+  margin-top:16px;
+}
+
+audio {
+  width:100%;
+  margin:18px 0;
+  accent-color:var(--purple);
+}
+
+#downloadAudio {
+  display:none;
+  text-decoration:none;
+  color:white;
+  background:#38215d;
+  border:1px solid #9b5cff;
+  padding:13px 20px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+footer {
+  text-align:center;
+  padding:30px;
+  border-top:1px solid var(--border);
+  color:var(--muted);
+  font-size:12px;
+}
+
+@media(max-width:600px) {
+  header {padding:0 5%}
+  .container {margin:35px auto}
+  .card {padding:19px}
+  .row {flex-direction:column}
+  .row button {width:100%}
+}
 </style>
 </head>
 
 <body>
 
-<h1>🎙️ Script & AI Voice Studio</h1>
-<p class="muted">Generate scripts and download clean voice audio for your computer and phone</p>
+<header>
+  <div class="logo">VIOLET<span> AI.</span></div>
+  <div class="header-tag">✦ AI CREATOR STUDIO</div>
+</header>
+
+<main class="container">
+
+<section class="hero">
+  <div class="eyebrow">YOUR CREATIVE SPACE</div>
+  <h1>Create. Speak.<br><span>Go Viral.</span></h1>
+  <p class="subtitle">
+    Turn your ideas into powerful scripts and natural AI voiceovers.
+    Everything you need in one studio.
+  </p>
+</section>
 
 <div class="card">
-<h2>🎬 1. Generate or Paste Your Script</h2>
+  <h2><span class="number">01</span> Script Generator</h2>
+  <p class="muted">What should your next video be about?</p>
 
-<input id="topic" placeholder="Example: 5 surprising football facts">
+  <input id="topic" placeholder="Example: 5 surprising football facts">
 
-<div class="row">
-<button id="generateBtn" onclick="generateScript()">Generate with Gemini</button>
-<button onclick="openChatGPT()">Generate with ChatGPT</button>
-</div>
+  <div class="row">
+    <button id="generateBtn" onclick="generateScript()">
+      ✦ Generate with Gemini
+    </button>
+    <button class="secondary" onclick="openChatGPT()">
+      Open ChatGPT ↗
+    </button>
+  </div>
 
-<p class="muted">
-ChatGPT opens in a new tab. Copy its script and paste it below.
-</p>
+  <p class="muted">
+    You can also paste your own script below.
+  </p>
 
-<textarea id="result" placeholder="Your script will appear here. You can also paste any script here directly."></textarea>
+  <textarea id="result" placeholder="Your generated script will appear here..."></textarea>
 
-<div class="row">
-<button onclick="copyScript()">Copy Script</button>
-</div>
+  <button class="secondary" onclick="copyScript()">Copy Script</button>
 </div>
 
 <div class="card">
-<h2>🔊 2. Create & Download AI Voice</h2>
+  <h2><span class="number">02</span> AI Voice Studio</h2>
+  <p class="muted">
+    Choose your preferred voice and turn your script into narration.
+  </p>
 
-<p class="muted">Generate a natural voice narration for your script.</p>
+  <select id="voice">
+    <option value="Kore">Kore — Clear and confident</option>
+    <option value="Puck">Puck — Lively</option>
+    <option value="Charon">Charon — Deep voice</option>
+    <option value="Aoede">Aoede — Warm voice</option>
+    <option value="Fenrir">Fenrir — Energetic</option>
+  </select>
 
-<select id="voice">
-<option value="Kore">Kore — clear and confident</option>
-<option value="Puck">Puck — lively</option>
-<option value="Charon">Charon — deeper</option>
-<option value="Aoede">Aoede — warm</option>
-<option value="Fenrir">Fenrir — energetic</option>
-</select>
+  <button id="audioBtn" onclick="makeNarration()">
+    ✦ Generate AI Voice
+  </button>
 
-<br>
-<button id="audioBtn" onclick="makeNarration()">Generate AI Voice</button>
+  <audio id="narration" controls style="display:none"></audio>
 
-<audio id="narration" controls style="display:none;width:95%;margin:12px auto"></audio>
+  <p id="audioStatus">Your audio is waiting to be created.</p>
 
-<p id="audioStatus" class="muted">No narration created yet.</p>
-
-<br>
-<a id="downloadAudio"
-style="display:none;color:#c4b5fd;font-weight:bold;font-size:18px;text-decoration:none;background:#7c3aed;padding:12px 24px;border-radius:9px;display:inline-block;margin-top:10px"
-download="ai-narration.wav">
-⬇ Download Audio File (.wav)
-</a>
+  <a id="downloadAudio" download="ai-narration.wav">
+    ↓ Download WAV Audio
+  </a>
 </div>
+
+</main>
+
+<footer>
+  <div class="logo">VIOLET<span> AI.</span></div>
+  <p>Designed for creators. Powered by AI.</p>
+  <p>© 2026 Violet AI Studio</p>
+</footer>
 
 <script>
-
 const API = "https://instagram-ai-assistant2.vercel.app";
 
 let generatedAudioUrl = null;
-let audioBlob = null;
 
-function getScript(){
-return document.getElementById("result").value.trim();
+function getScript() {
+  return document.getElementById("result").value.trim();
 }
 
-function openChatGPT(){
-const topic = document.getElementById("topic").value.trim();
+function openChatGPT() {
+  const topic = document.getElementById("topic").value.trim();
 
-if(!topic){
-alert("Please enter a topic first.");
-return;
+  if (!topic) {
+    alert("Please enter a topic first.");
+    return;
+  }
+
+  const prompt =
+    "Create an exciting 30-45 second voiceover script about " +
+    topic +
+    ". Use exciting spoken language and interesting facts. No camera directions.";
+
+  navigator.clipboard.writeText(prompt).then(() => {
+    alert("Prompt copied! Paste it into ChatGPT.");
+    window.open("https://chatgpt.com/", "_blank");
+  }).catch(() => {
+    window.open("https://chatgpt.com/", "_blank");
+    alert("Please enter this topic into ChatGPT: " + prompt);
+  });
 }
 
-const prompt =
-"Create an exciting voiceover script about " + topic +
-". Make it 30-45 seconds long. Use exciting spoken language and interesting facts. Do not include camera or visual directions.";
+async function generateScript() {
+  const topic = document.getElementById("topic").value.trim();
+  const btn = document.getElementById("generateBtn");
+  const result = document.getElementById("result");
 
-navigator.clipboard.writeText(prompt).then(()=>{
-alert("Prompt copied! Paste it into ChatGPT. Then copy the script and paste it back into this studio.");
-window.open("https://chatgpt.com/","_blank");
-}).catch(()=>{
-window.open("https://chatgpt.com/","_blank");
-alert("Please type this prompt into ChatGPT: " + prompt);
+  if (!topic) {
+    alert("Please enter a topic.");
+    return;
+  }
+
+  btn.disabled = true;
+  result.value = "Creating your script...";
+
+  try {
+    const response = await fetch(API + "/generate-script", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({topic: topic, ai: "Gemini"})
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.detail || "Script generation failed.");
+    }
+
+    result.value = data.script;
+    resetAudio("New script created. Generate its narration.");
+
+  } catch (error) {
+    result.value = "Error: " + error.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function makeNarration() {
+  const script = getScript();
+  const btn = document.getElementById("audioBtn");
+
+  if (!script) {
+    alert("Generate or paste a script first.");
+    return;
+  }
+
+  btn.disabled = true;
+  document.getElementById("audioStatus").innerText =
+    "Creating your AI voice...";
+
+  document.getElementById("downloadAudio").style.display = "none";
+
+  try {
+    const response = await fetch(API + "/generate-audio", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        text: script,
+        voice: document.getElementById("voice").value
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.detail || "Voice generation failed.");
+    }
+
+    const binary = atob(data.audio);
+    const bytes = new Uint8Array(binary.length);
+
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+
+    const blob = new Blob([bytes], {type: "audio/wav"});
+
+    if (generatedAudioUrl) {
+      URL.revokeObjectURL(generatedAudioUrl);
+    }
+
+    generatedAudioUrl = URL.createObjectURL(blob);
+
+    const player = document.getElementById("narration");
+    player.src = generatedAudioUrl;
+    player.style.display = "block";
+
+    const download = document.getElementById("downloadAudio");
+    download.href = generatedAudioUrl;
+    download.style.display = "inline-block";
+
+    document.getElementById("audioStatus").innerText =
+      "✓ Your narration is ready!";
+
+  } catch (error) {
+    document.getElementById("audioStatus").innerText =
+      "Error: " + error.message;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function resetAudio(message) {
+  if (generatedAudioUrl) {
+    URL.revokeObjectURL(generatedAudioUrl);
+    generatedAudioUrl = null;
+  }
+
+  const player = document.getElementById("narration");
+  player.pause();
+  player.removeAttribute("src");
+  player.style.display = "none";
+
+  document.getElementById("downloadAudio").style.display = "none";
+  document.getElementById("audioStatus").innerText = message;
+}
+
+function copyScript() {
+  const script = getScript();
+
+  if (!script) {
+    alert("There is no script to copy.");
+    return;
+  }
+
+  navigator.clipboard.writeText(script)
+    .then(() => alert("Script copied!"))
+    .catch(() => alert("Copy is not available in this browser."));
+}
+
+document.getElementById("result").addEventListener("input", () => {
+  resetAudio("Script changed. Generate a new narration.");
 });
-}
-
-async function generateScript(){
-const topic = document.getElementById("topic").value.trim();
-const btn = document.getElementById("generateBtn");
-const result = document.getElementById("result");
-
-if(!topic){
-alert("Please enter a topic.");
-return;
-}
-
-btn.disabled = true;
-result.value = "Generating with Gemini...";
-
-try{
-const response = await fetch(API + "/generate-script",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({topic:topic,ai:"Gemini"})
-});
-
-const data = await response.json();
-
-if(!response.ok){
-throw new Error(data.detail || "Script generation failed.");
-}
-
-result.value = data.script;
-audioBlob = null;
-document.getElementById("narration").style.display = "none";
-document.getElementById("downloadAudio").style.display = "none";
-document.getElementById("audioStatus").innerText = "New script created. Generate its narration.";
-
-}catch(error){
-result.value = "Error: " + error.message;
-}finally{
-btn.disabled = false;
-}
-}
-
-async function makeNarration(){
-const script = getScript();
-const btn = document.getElementById("audioBtn");
-
-if(!script){
-alert("Generate or paste a script first.");
-return;
-}
-
-btn.disabled = true;
-document.getElementById("audioStatus").innerText = "Generating AI narration...";
-document.getElementById("downloadAudio").style.display = "none";
-
-try{
-const response = await fetch(API + "/generate-audio",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-text:script,
-voice:document.getElementById("voice").value
-})
-});
-
-const data = await response.json();
-
-if(!response.ok){
-throw new Error(data.detail || "Voice generation failed.");
-}
-
-const binary = atob(data.audio);
-const bytes = new Uint8Array(binary.length);
-
-for(let i=0;i<binary.length;i++){
-bytes[i] = binary.charCodeAt(i);
-}
-
-audioBlob = new Blob([bytes],{type:"audio/wav"});
-
-if(generatedAudioUrl){
-URL.revokeObjectURL(generatedAudioUrl);
-}
-
-generatedAudioUrl = URL.createObjectURL(audioBlob);
-
-const player = document.getElementById("narration");
-player.src = generatedAudioUrl;
-player.style.display = "block";
-
-const downloadLink = document.getElementById("downloadAudio");
-downloadLink.href = generatedAudioUrl;
-downloadLink.style.display = "inline-block";
-
-document.getElementById("audioStatus").innerText = "Narration ready to play and download!";
-
-}catch(error){
-document.getElementById("audioStatus").innerText = "Error: " + error.message;
-}finally{
-btn.disabled = false;
-}
-}
-
-function copyScript(){
-const script = getScript();
-if(!script){
-alert("There is no script to copy.");
-return;
-}
-navigator.clipboard.writeText(script).then(()=>alert("Script copied!"));
-}
-
 </script>
 
 </body>
